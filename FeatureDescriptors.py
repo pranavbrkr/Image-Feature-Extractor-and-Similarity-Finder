@@ -99,7 +99,7 @@ def extractHOG():
 
         hog_descriptor.append(bins)
 
-    hog_descriptor = torch.tensor(hog_descriptor)
+    hog_descriptor = torch.tensor(np.array(hog_descriptor))
     print("**********")
     print("Following is a HOG feature descriptor")
     print(hog_descriptor)
