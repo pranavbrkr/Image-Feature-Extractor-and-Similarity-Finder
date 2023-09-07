@@ -59,6 +59,7 @@ def extractCM10x10():
     color_moments = torch.tensor(color_moments)
     print("**********")
     print("Following is a color moments feature descriptor")
+    print(color_moments)
     print(color_moments.shape)
     print("**********")
 
@@ -101,6 +102,7 @@ def extractHOG():
     hog_descriptor = torch.tensor(hog_descriptor)
     print("**********")
     print("Following is a HOG feature descriptor")
+    print(hog_descriptor)
     print(hog_descriptor.shape)
     print("**********")
 
@@ -126,6 +128,7 @@ def extractResnetAvgpool1024():
     avgpool_feature_descriptor = torch.tensor([((avgpool_output_matrix[i].item() + avgpool_output_matrix[i+1].item()) / 2) for i in range(0, len(avgpool_output_matrix), 2)])
     print("**********")
     print("Following is a avgpool 1024 feature descriptor")
+    print(avgpool_feature_descriptor)
     print(avgpool_feature_descriptor.shape)
     print("**********")
 
@@ -154,6 +157,7 @@ def extractResnetLayer3():
 
     print("**********")
     print("Following is a layer 3 feature descriptor")
+    print(layer3_feature_descriptor)
     print(layer3_feature_descriptor.shape)
     print("**********")
     
@@ -174,6 +178,7 @@ def extractResnetFc():
 
     print("**********")
     print("Following is a fc feature descriptor")
+    print(fc_feature_descriptor)
     print(fc_feature_descriptor.shape)
     print("**********")
 
