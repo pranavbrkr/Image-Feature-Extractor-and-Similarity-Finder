@@ -26,11 +26,11 @@ for image_id in range(n):
       "fc": extractResnetFc(caltectDataset[image_id][1]),
     }
 
-  if feature_descriptors.find_one({"_id": image_id}):
-    feature_descriptors.update_one({"_id": image_id}, {"$set": data})
-    print(f"Updated feature descriptors for Image {image_id}")
-  else:
-    feature_descriptors.insert_one(data)
-    print(f"Inserted feature descriptors for Image {image_id}")
+    if feature_descriptors.find_one({"_id": image_id}):
+      feature_descriptors.update_one({"_id": image_id}, {"$set": data})
+      print(f"Updated feature descriptors for Image {image_id}")
+    else:
+      feature_descriptors.insert_one(data)
+      print(f"Inserted feature descriptors for Image {image_id}")
  
 print(f"{(time.time() - start_time)} seconds")
