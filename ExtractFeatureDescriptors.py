@@ -17,14 +17,17 @@ def loadDataset():
   caltechDataset = [(i, loadedDataset[i][0]) for i in range(n)]
   return caltechDataset
 
+def checkChannel(image_tensor):
+  return image_tensor.shape[0] == 3
+
 # Set grid size and loop iteration counter
 grid_width, grid_height = 30, 10
 grid_num_x = 10
 grid_num_y = 10
 
 # Extract Color moments feature descriptor from the image
-def extractCM10x10(caltectDataset, image_number):
-  image = caltectDataset[image_number][1]
+def extractCM10x10(image):
+  
   color_moments = []
 
   # Resize the tensor to 300x100
@@ -55,10 +58,9 @@ def extractCM10x10(caltectDataset, image_number):
   return color_moments
 
 # Extract HOG feature descriptor
-def extractHOG(caltectDataset, image_number):
+def extractHOG(image):
 
   hog_descriptor = []
-  image = caltectDataset[image_number][1]
   
   # Resize the image to 224x224
   image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image)
@@ -102,10 +104,9 @@ def hook_fn(module, input, output):
     layer_output = output
 
 # Extract output of Avgpool 1024 Layer output from Resnet50
-def extractResnetAvgpool1024(caltectDataset, image_number):
+def extractResnetAvgpool1024(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
-  image = caltectDataset[image_number][1]
 
   # Resize the image to 224x224
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
@@ -123,11 +124,10 @@ def extractResnetAvgpool1024(caltectDataset, image_number):
   return avgpool_feature_descriptor
 
         
-def extractResnetLayer3(caltectDataset, image_number):
+def extractResnetLayer3(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
-  image = caltectDataset[image_number][1]
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
   # Select Layer3
@@ -150,11 +150,10 @@ def extractResnetLayer3(caltectDataset, image_number):
   return layer3_feature_descriptor
     
         
-def extractResnetFc(caltectDataset, image_number):
+def extractResnetFc(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
-  image = caltectDataset[image_number][1]
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
   # Select FC layer
@@ -177,6 +176,10 @@ def main():
   # User input for Image ID
   image_id = int(input("Enter image ID: "))
 
+  if not checkChannel(caltectDataset[image_id][1]):
+    print("The given image does not have 3 channels")
+    return
+
   # User input for feature model to extract
   print("1: Color moments")
   print("2: HOG")
@@ -189,27 +192,27 @@ def main():
   match k:
 
     case 1:
-      feature_descriptor = extractCM10x10(caltectDataset, image_id)
+      feature_descriptor = extractCM10x10(caltectDataset[image_id][1])
       print("Color moments feature descriptor is as follows:")
       print(feature_descriptor)
 
     case 2:
-      feature_descriptor = extractHOG(caltectDataset, image_id)
+      feature_descriptor = extractHOG(caltectDataset[image_id][1])
       print("HOG feature descriptor is as follows:")
       print(feature_descriptor)
 
     case 3:
-      feature_descriptor = extractResnetAvgpool1024(caltectDataset, image_id)
+      feature_descriptor = extractResnetAvgpool1024(caltectDataset[image_id][1])
       print("Resnet50 Avgpool feature descriptor is as follows:")
       print(feature_descriptor)
 
     case 4:
-      feature_descriptor = extractResnetLayer3(caltectDataset, image_id)
+      feature_descriptor = extractResnetLayer3(caltectDataset[image_id][1])
       print("Resnet50 Layer3 feature descriptor is as follows:")
       print(feature_descriptor)
 
     case 5:
-      feature_descriptor = extractResnetFc(caltectDataset, image_id)
+      feature_descriptor = extractResnetFc(caltectDataset[image_id][1])
       print("Resnet50 FC feature descriptor is as follows:")
       print(feature_descriptor)
 

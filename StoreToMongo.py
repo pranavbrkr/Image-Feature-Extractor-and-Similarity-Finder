@@ -16,15 +16,21 @@ feature_descriptors = db.feature_descriptors
 
 n = len(caltectDataset)
 
+count = 0
+
+f = open('data.json', 'wb')
+jsonarray = []
+
 for image_id in range(n):
-  data = {
-    "_id": image_id,
-    "color_moments": extractCM10x10(caltectDataset, image_id),
-    "hog": extractHOG(caltectDataset, image_id),
-    "avgpool": extractResnetAvgpool1024(caltectDataset, image_id),
-    "layer3": extractResnetLayer3(caltectDataset, image_id),
-    "fc": extractResnetFc(caltectDataset, image_id),
-  }
+  if checkChannel(caltectDataset[image_id][1]):
+    data = {
+      "_id": image_id,
+      "color_moments": extractCM10x10(caltectDataset[image_id][1]),
+      "hog": extractHOG(caltectDataset[image_id][1]),
+      "avgpool": extractResnetAvgpool1024(caltectDataset[image_id][1]),
+      "layer3": extractResnetLayer3(caltectDataset[image_id][1]),
+      "fc": extractResnetFc(caltectDataset[image_id][1]),
+    }
 
   if feature_descriptors.find_one({"_id": image_id}):
     feature_descriptors.update_one({"_id": image_id}, {"$set": data})
@@ -33,9 +39,4 @@ for image_id in range(n):
     feature_descriptors.insert_one(data)
     print(f"Inserted feature descriptors for Image {image_id}")
  
-
-# storeInMongo(image_id)
-# with parallel_config(backend='threading', n_jobs=100):
-#   Parallel()(delayed(storeInMongo)(i) for i in range(300))
-
 print(f"{(time.time() - start_time)} seconds")
