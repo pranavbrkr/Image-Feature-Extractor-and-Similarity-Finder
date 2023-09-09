@@ -1,7 +1,6 @@
 from ExtractFeatureDescriptors import *
 from pymongo import MongoClient
 import time
-from joblib import Parallel, parallel_config, delayed
 
 start_time = time.time()
 
@@ -15,11 +14,6 @@ db = client.MWD_Phase_1
 feature_descriptors = db.feature_descriptors
 
 n = len(caltectDataset)
-
-count = 0
-
-f = open('data.json', 'wb')
-jsonarray = []
 
 for image_id in range(n):
   if checkChannel(caltectDataset[image_id][1]):
