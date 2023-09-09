@@ -134,10 +134,8 @@ def extractResnetAvgpool1024(image):
   # Resize the image to 224x224
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
-  # Select Avgpool 1024 layer
-  avgpool_layer = model.avgpool
-  # Register the forward hook for the above layer
-  hook = avgpool_layer.register_forward_hook(hook_fn)
+  # Register the forward hook for Avgpool 1024 layer
+  hook = model.avgpool.register_forward_hook(hook_fn)
 
   output = model(image_tensor.unsqueeze(0))
 
@@ -156,10 +154,8 @@ def extractResnetLayer3(image):
 
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
-  # Select Layer3
-  layer3_layer = model.layer3
-  # Register the forward hook for the above layer
-  hook = layer3_layer.register_forward_hook(hook_fn)
+  # Register the forward hook for layer 3
+  hook = model.layer3.register_forward_hook(hook_fn)
 
   output = model(image_tensor.unsqueeze(0))
 
@@ -185,10 +181,8 @@ def extractResnetFc(image):
 
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
-  # Select FC layer
-  fc_layer = model.fc
-  # Register the forward hook for the above layer
-  hook = fc_layer.register_forward_hook(hook_fn)
+  # Register the forward hook for the fc layer
+  hook = model.fc.register_forward_hook(hook_fn)
 
   output = model(image_tensor.unsqueeze(0))
 

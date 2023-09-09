@@ -15,7 +15,7 @@ feature_descriptors = db.Feature_Descriptors
 
 n = len(caltectDataset)
 
-for image_id in range(n):
+for image_id in range(1470, n):
   if checkChannel(caltectDataset[image_id][1]):
     data = {
       "_id": image_id,
