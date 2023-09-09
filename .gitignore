@@ -1,2 +1,2 @@
-Dataset/
-__pycache__/
+Dataset/*
+__pycache__/*
