@@ -32,7 +32,7 @@ def storeInMongo(image_id):
     print(f"Inserted feature descriptors for Image {image_id}")
  
 n = len(caltectDataset)
-for image_id in range(n//2):
+for image_id in range(n):
   storeInMongo(image_id)
 # with parallel_config(backend='threading', n_jobs=5):
 #   Parallel()(delayed(storeInMongo)(i) for i in range(300))
