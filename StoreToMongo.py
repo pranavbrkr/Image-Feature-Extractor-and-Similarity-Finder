@@ -14,7 +14,9 @@ db = client.MWD_Phase_1
 
 feature_descriptors = db.feature_descriptors
 
-def storeInMongo(image_id):
+n = len(caltectDataset)
+
+for image_id in range(n):
   data = {
     "_id": image_id,
     "color_moments": extractCM10x10(caltectDataset, image_id),
@@ -31,10 +33,9 @@ def storeInMongo(image_id):
     feature_descriptors.insert_one(data)
     print(f"Inserted feature descriptors for Image {image_id}")
  
-n = len(caltectDataset)
-for image_id in range(n):
-  storeInMongo(image_id)
-# with parallel_config(backend='threading', n_jobs=5):
+
+# storeInMongo(image_id)
+# with parallel_config(backend='threading', n_jobs=100):
 #   Parallel()(delayed(storeInMongo)(i) for i in range(300))
 
 print(f"{(time.time() - start_time)} seconds")
