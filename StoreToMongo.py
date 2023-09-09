@@ -8,18 +8,18 @@ caltectDataset = loadDataset()
 
 db = client.MWD_Phase_1
 
-testcoll = db.feature_descriptors
+feature_descriptors = db.feature_descriptors
 
 for i in range(10):
   data = {
     "_id": i,
-    "color_moments": extractCM10x10(caltectDataset, i).tolist(),
-    "hog": extractHOG(caltectDataset, i).tolist(),
-    "avgpool": extractResnetAvgpool1024(caltectDataset, i).tolist(),
-    "layer3": extractResnetLayer3(caltectDataset, i).tolist(),
-    "fc": extractResnetFc(caltectDataset, i).tolist(),
+    "color_moments": extractCM10x10(caltectDataset, i),
+    "hog": extractHOG(caltectDataset, i),
+    "avgpool": extractResnetAvgpool1024(caltectDataset, i),
+    "layer3": extractResnetLayer3(caltectDataset, i),
+    "fc": extractResnetFc(caltectDataset, i),
   }
 
-  result = testcoll.insert_one(data)
+  result = feature_descriptors.insert_one(data)
 
   print(result)

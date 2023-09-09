@@ -47,7 +47,7 @@ def extractCM10x10(caltectDataset, image_number):
 
       color_moments.append(grid_moment)
 
-  color_moments = torch.flatten(torch.tensor(color_moments))
+  color_moments = torch.flatten(torch.tensor(color_moments)).tolist()
 
   return color_moments
 
@@ -89,7 +89,7 @@ def extractHOG(caltectDataset, image_number):
 
       hog_descriptor.append(bins)
 
-  hog_descriptor = torch.flatten(torch.tensor(np.array(hog_descriptor)))
+  hog_descriptor = torch.flatten(torch.tensor(np.array(hog_descriptor))).tolist()
 
   return hog_descriptor
 
@@ -115,7 +115,7 @@ def extractResnetAvgpool1024(caltectDataset, image_number):
   output = model(image_tensor.unsqueeze(0))
 
   avgpool_output_matrix = torch.squeeze(layer_output)
-  avgpool_feature_descriptor = torch.tensor([((avgpool_output_matrix[i].item() + avgpool_output_matrix[i+1].item()) / 2) for i in range(0, len(avgpool_output_matrix), 2)])
+  avgpool_feature_descriptor = torch.tensor([((avgpool_output_matrix[i].item() + avgpool_output_matrix[i+1].item()) / 2) for i in range(0, len(avgpool_output_matrix), 2)]).tolist()
 
   return avgpool_feature_descriptor
 
@@ -142,7 +142,7 @@ def extractResnetLayer3(caltectDataset, image_number):
   for layer3_len in range(len(layer3_feature_descriptor_matrix)):
     layer3_feature_descriptor.append(np.average(layer3_feature_descriptor_matrix[layer3_len].detach().numpy()))
 
-  layer3_feature_descriptor = torch.tensor(layer3_feature_descriptor)
+  layer3_feature_descriptor = torch.tensor(layer3_feature_descriptor).tolist()
 
   return layer3_feature_descriptor
     
@@ -161,7 +161,7 @@ def extractResnetFc(caltectDataset, image_number):
 
   output = model(image_tensor.unsqueeze(0))
 
-  fc_feature_descriptor = torch.squeeze(layer_output)
+  fc_feature_descriptor = torch.squeeze(layer_output).tolist()
 
   return fc_feature_descriptor
 
