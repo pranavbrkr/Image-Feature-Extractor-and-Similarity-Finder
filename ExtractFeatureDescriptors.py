@@ -1,43 +1,29 @@
-import sys
 from scipy.signal import convolve
 import torch
 import torchvision
 import torchvision.transforms as transforms
 import numpy as np
 from torchvision.models import resnet50, ResNet50_Weights
-from PIL import ImageOps
 
-# Resize image to 300x100 and convert to tensor
-transform_300x100 = transforms.Compose([
-  transforms.Resize((300, 100)),
-  transforms.ToTensor(),
-])
-
-# Transform image to grayscale and resize to 300x100
-transform_grayscale = transforms.Compose([
-  transforms.Resize((300, 100)),
-])
-
-# Resize image to 224x224 and convert to tensor
-transform_224x224 = transforms.Compose([
-  transforms.Resize((224, 224)),
+# Convert images from PIL.JpegImagePlugin.JpegImageFile to Tensor
+transform_tensor = transforms.Compose([
   transforms.ToTensor(),
 ])
 
 # Load Caltech Dataset
-caltectDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_300x100, download=True)
+def loadDataset():
+  global caltectDataset
+  caltectDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_tensor, download=True)
 
-datasetLength = len(caltectDataset)
-resized_data = []
 grid_width, grid_height = 30, 10
 grid_num_x = 10
 grid_num_y = 10
 
-k = 1
-
 def extractCM10x10(image_number):
   (image_tensor, label) = caltectDataset[image_number]
   color_moments = []
+
+  image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image_tensor)
 
   # Extract 30x10 grid from the image    
   for i in range(grid_num_x):
@@ -64,14 +50,10 @@ def extractCM10x10(image_number):
 
 def extractHOG(image_number):
 
-  caltectDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_grayscale, download=True)
-
   hog_descriptor = []
   (image, label) = caltectDataset[image_number]
-  image_grayscale = ImageOps.grayscale(image)
-
-  image_grayscale_tensor = transforms.functional.pil_to_tensor(image_grayscale)
-  image_grayscale_tensor = image_grayscale_tensor.permute(1, 2, 0)[:, :, -1]
+  image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image)
+  image_grayscale_tensor = torchvision.transforms.functional.rgb_to_grayscale(img=image_tensor).squeeze(0)
 
   for i in range(grid_num_x):
     for j in range(grid_num_y):
@@ -106,10 +88,11 @@ def hook_fn(module, input, output):
     layer_output = output
 
 def extractResnetAvgpool1024(image_number):
-  caltectDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_224x224, download=True)
-  model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
+  model = resnet50(weights=ResNet50_Weights.DEFAULT)
   (image_tensor, label) = caltectDataset[image_number]
+
+  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image_tensor)
 
 
   avgpool_layer = model.avgpool
@@ -124,10 +107,11 @@ def extractResnetAvgpool1024(image_number):
 
         
 def extractResnetLayer3(image_number):
-  caltectDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_224x224, download=True)
+
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
   (image_tensor, label) = caltectDataset[image_number]
+  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image_tensor)
 
   layer3_layer = model.layer3
   hook = layer3_layer.register_forward_hook(hook_fn)
@@ -148,10 +132,11 @@ def extractResnetLayer3(image_number):
     
         
 def extractResnetFc(image_number):
-  caltectDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_224x224, download=True)
+
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
   (image_tensor, label) = caltectDataset[image_number]
+  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image_tensor)
 
   fc_layer = model.fc
   hook = fc_layer.register_forward_hook(hook_fn)
@@ -164,6 +149,8 @@ def extractResnetFc(image_number):
 
 
 def main():
+
+  loadDataset()
 
   image_id = int(input("Enter image ID: "))
 
