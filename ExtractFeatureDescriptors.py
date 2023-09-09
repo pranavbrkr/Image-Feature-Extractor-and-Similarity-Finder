@@ -13,7 +13,8 @@ transform_tensor = transforms.Compose([
 # Load Caltech Dataset
 def loadDataset():
   loadedDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_tensor, download=True)
-  caltechDataset = [image_tensor for image_tensor, label in loadedDataset if image_tensor.shape[0] == 3]
+  n = len(loadedDataset)
+  caltechDataset = [(i, loadedDataset[i][0]) for i in range(n)]
   return caltechDataset
 
 # Set grid size and loop iteration counter
@@ -23,7 +24,7 @@ grid_num_y = 10
 
 # Extract Color moments feature descriptor from the image
 def extractCM10x10(caltectDataset, image_number):
-  image = caltectDataset[image_number]
+  image = caltectDataset[image_number][1]
   color_moments = []
 
   # Resize the tensor to 300x100
@@ -57,7 +58,7 @@ def extractCM10x10(caltectDataset, image_number):
 def extractHOG(caltectDataset, image_number):
 
   hog_descriptor = []
-  image = caltectDataset[image_number]
+  image = caltectDataset[image_number][1]
   
   # Resize the image to 224x224
   image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image)
@@ -104,7 +105,7 @@ def hook_fn(module, input, output):
 def extractResnetAvgpool1024(caltectDataset, image_number):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
-  image = caltectDataset[image_number]
+  image = caltectDataset[image_number][1]
 
   # Resize the image to 224x224
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
@@ -126,7 +127,7 @@ def extractResnetLayer3(caltectDataset, image_number):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
-  image = caltectDataset[image_number]
+  image = caltectDataset[image_number][1]
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
   # Select Layer3
@@ -153,7 +154,7 @@ def extractResnetFc(caltectDataset, image_number):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
-  image = caltectDataset[image_number]
+  image = caltectDataset[image_number][1]
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
   # Select FC layer
