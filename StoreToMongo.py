@@ -9,9 +9,9 @@ client = MongoClient(host="localhost", port=27017)
 
 caltectDataset = loadDataset()
 
-db = client.MWD_Phase_1
+db = client.Multimedia_Web_DBs
 
-feature_descriptors = db.feature_descriptors
+feature_descriptors = db.Feature_Descriptors
 
 n = len(caltectDataset)
 
