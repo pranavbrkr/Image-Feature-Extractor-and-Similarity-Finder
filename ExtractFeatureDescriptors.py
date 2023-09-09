@@ -12,7 +12,9 @@ transform_tensor = transforms.Compose([
 
 # Load Caltech Dataset
 def loadDataset():
-  return torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_tensor, download=True)
+  loadedDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_tensor, download=True)
+  caltechDataset = [image_tensor for image_tensor, label in loadedDataset if image_tensor.shape[0] == 3]
+  return caltechDataset
 
 # Set grid size and loop iteration counter
 grid_width, grid_height = 30, 10
@@ -21,11 +23,11 @@ grid_num_y = 10
 
 # Extract Color moments feature descriptor from the image
 def extractCM10x10(caltectDataset, image_number):
-  (image_tensor, label) = caltectDataset[image_number]
+  image = caltectDataset[image_number]
   color_moments = []
 
   # Resize the tensor to 300x100
-  image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image_tensor)
+  image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image)
 
   # Extract 30x10 grid from the image    
   for i in range(grid_num_x):
@@ -55,7 +57,7 @@ def extractCM10x10(caltectDataset, image_number):
 def extractHOG(caltectDataset, image_number):
 
   hog_descriptor = []
-  (image, label) = caltectDataset[image_number]
+  image = caltectDataset[image_number]
   
   # Resize the image to 224x224
   image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image)
@@ -102,10 +104,10 @@ def hook_fn(module, input, output):
 def extractResnetAvgpool1024(caltectDataset, image_number):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
-  (image_tensor, label) = caltectDataset[image_number]
+  image = caltectDataset[image_number]
 
   # Resize the image to 224x224
-  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image_tensor)
+  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
   # Select Avgpool 1024 layer
   avgpool_layer = model.avgpool
@@ -124,8 +126,8 @@ def extractResnetLayer3(caltectDataset, image_number):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
-  (image_tensor, label) = caltectDataset[image_number]
-  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image_tensor)
+  image = caltectDataset[image_number]
+  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
   # Select Layer3
   layer3_layer = model.layer3
@@ -151,8 +153,8 @@ def extractResnetFc(caltectDataset, image_number):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
 
-  (image_tensor, label) = caltectDataset[image_number]
-  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image_tensor)
+  image = caltectDataset[image_number]
+  image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
   # Select FC layer
   fc_layer = model.fc
