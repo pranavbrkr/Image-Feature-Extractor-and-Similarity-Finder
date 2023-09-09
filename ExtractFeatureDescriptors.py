@@ -5,11 +5,17 @@ import torchvision.transforms as transforms
 import numpy as np
 from torchvision.models import resnet50, ResNet50_Weights
 
+
+#
+#
 # Convert images from PIL.JpegImagePlugin.JpegImageFile to Tensor
 transform_tensor = transforms.Compose([
   transforms.ToTensor(),
 ])
 
+
+#
+#
 # Load Caltech Dataset
 def loadDataset():
   loadedDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_tensor, download=True)
@@ -17,14 +23,22 @@ def loadDataset():
   caltechDataset = [(i, loadedDataset[i][0]) for i in range(n)]
   return caltechDataset
 
+
+#
+#
+# Check if the image has RGB channels
 def checkChannel(image_tensor):
   return image_tensor.shape[0] == 3
+
 
 # Set grid size and loop iteration counter
 grid_width, grid_height = 30, 10
 grid_num_x = 10
 grid_num_y = 10
 
+
+#
+#
 # Extract Color moments feature descriptor from the image
 def extractCM10x10(image):
   
@@ -57,6 +71,9 @@ def extractCM10x10(image):
 
   return color_moments
 
+
+#
+#
 # Extract HOG feature descriptor
 def extractHOG(image):
 
@@ -99,11 +116,17 @@ def extractHOG(image):
   return hog_descriptor
 
 
+#
+#
+# Define hook function
 def hook_fn(module, input, output):
     global layer_output
     layer_output = output
 
-# Extract output of Avgpool 1024 Layer output from Resnet50
+
+#
+#
+# Extract output of Avgpool 1024 layer output from Resnet50
 def extractResnetAvgpool1024(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
@@ -123,7 +146,10 @@ def extractResnetAvgpool1024(image):
 
   return avgpool_feature_descriptor
 
-        
+
+#
+#
+# Extract output of Layer 3 output from Resnet50    
 def extractResnetLayer3(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
@@ -149,7 +175,10 @@ def extractResnetLayer3(image):
 
   return layer3_feature_descriptor
     
-        
+
+#
+#
+# Extract output of fully connected layer output from Resnet50
 def extractResnetFc(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
