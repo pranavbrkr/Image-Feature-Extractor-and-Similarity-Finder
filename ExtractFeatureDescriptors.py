@@ -200,7 +200,10 @@ def main():
   image_id = int(input("Enter image ID: "))
 
   if not checkChannel(caltectDataset[image_id][1]):
-    print("The given image does not have 3 channels")
+    print("The given image does not have 3 channels. Can only compute HOG")
+    feature_descriptor = extractHOG(caltectDataset[image_id][1])
+    print("HOG feature descriptor is as follows:")
+    print(feature_descriptor)
     return
 
   # User input for feature model to extract
