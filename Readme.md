@@ -13,7 +13,7 @@ and then consumes those database entries to find "k" images similar to the user 
 5. Stable internet connection to download the dataset
 
 
-###Python libraries
+### Python libraries
 
 1. torch
 2. torchvision
@@ -24,27 +24,31 @@ and then consumes those database entries to find "k" images similar to the user 
 7. scipy
 
 
-##Steps:
+## Steps:
 
-###Task 1:
+### Task 1:
 
 1. Run the command "python ExtractFeatureDescriptors.py" from within the project directory. (or "python3 ExtractFeatureDescriptors.py" depedning upon the python alias in your system.)
 2. Enter Image ID of choice when prompted.
 3. Enter the desired feature model option as prompted.
 
-The output will be displayed on the terminal.
+Following output will be displayed on the terminal.
+
+![image](https://github.com/pranavbrkr/Image-Feature-Extractor-and-Similarity-Finder/assets/31160043/05a7d860-ffb1-4afd-872b-c51fa687a987)
 
 
-###Task 2:
+### Task 2:
 
 (Make sure you have installed MongoDB requirements as stated above.)
 1. Change the host specification, database name and collection name on line 9, 15, 18 respectively if necessary.
 2. Run the command "python StoreToMongo.py" from within the project directory. (or "python3 StoreToMongo.py" depedning upon the python alias in your system.)
 
-The data will be stored in the MongoDB collection.
+The data will be stored in the MongoDB collection as shown in the picture below.
+
+![image](https://github.com/pranavbrkr/Image-Feature-Extractor-and-Similarity-Finder/assets/31160043/5a2894b8-4c31-4b7a-9cf0-8054ca424974)
 
 
-###Task 3:
+### Task 3:
 
 (Make sure you have installed MongoDB requirements as stated above.)
 1. Change the host specification, database name and collection name on line 10, 22, 25 respectively if necessary.
@@ -52,4 +56,7 @@ The data will be stored in the MongoDB collection.
 3. Enter the image ID of choice when prompted.
 4. Enter "k" when prompted.
 
-The matplotlib grid with the similar images will be displayed.
+The matplotlib grid with the similar images will be displayed as follows.
+
+![image](https://github.com/pranavbrkr/Image-Feature-Extractor-and-Similarity-Finder/assets/31160043/fd987af4-02ed-4dfb-8a1d-a84ceb8aebaf)
+
