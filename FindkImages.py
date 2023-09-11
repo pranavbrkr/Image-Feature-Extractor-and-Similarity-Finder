@@ -5,17 +5,23 @@ import scipy
 import math
 import numpy as np
 
+# Connect to MongoDB Client
 client = MongoClient()
 client = MongoClient(host="localhost", port=27017)
 
+# Load image dataset
 caltectDataset = loadDataset()
 
+# Take input for image ID
 image_id = int(input("Enter Image ID of the image: "))
 
+# Take input for number "k"
 k = int(input("Enter value of k: "))
 
+# Select the database
 db = client.Multimedia_Web_DBs
 
+# Fetch all documents from the collection and then sort them by "_id"
 feature_descriptors = list(db.Feature_Descriptors.find({}))
 feature_descriptors = sorted(list(db.Feature_Descriptors.find({})), key=lambda x: x["_id"], reverse=False)
 n = len(feature_descriptors)
@@ -29,6 +35,8 @@ fc_pearson_distances = []
 for i in range(n):
   if i == image_id:
     continue
+
+  # Calculate the relevant similarity measures
 
   if feature_descriptors[i].get("color_moments") and feature_descriptors[image_id].get("color_moments"):
     euclidean_cm_distances.append({"_id": feature_descriptors[i]["_id"],  "similarity": math.dist(feature_descriptors[image_id]["color_moments"], feature_descriptors[i]["color_moments"])})
@@ -46,6 +54,7 @@ for i in range(n):
     fc_pearson_distances.append({"_id": feature_descriptors[i]["_id"], "similarity": scipy.stats.pearsonr(feature_descriptors[image_id]["fc"], feature_descriptors[i]["fc"]).statistic})
 
 
+# Sort the similarity lists
 euclidean_cm_similarity = sorted(euclidean_cm_distances, key=lambda x: x["similarity"], reverse=False)
 cosine_hog_similarity = sorted(cosine_hog_distances, key=lambda x: x["similarity"], reverse=True)
 avgpool_pearson_similarity = sorted(avgpool_pearson_distances, key=lambda x: x["similarity"], reverse=True)
@@ -60,7 +69,9 @@ figure_data = [
   fc_pearson_similarity,
 ]
 
-
+#
+#
+# Display the similar images into a matplotlib grid
 num_rows = 6
 fig, axes = plt.subplots(num_rows, k, figsize=(10, 10))  # Adjust the figsize as needed
 
