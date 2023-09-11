@@ -1,8 +1,6 @@
 from ExtractFeatureDescriptors import *
 from pymongo import MongoClient
-import time
 
-start_time = time.time()
 
 client = MongoClient()
 client = MongoClient(host="localhost", port=27017)

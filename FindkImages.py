@@ -1,5 +1,4 @@
 from ExtractFeatureDescriptors import loadDataset
-from statistics import covariance
 from pymongo import MongoClient
 import matplotlib.pyplot as plt
 import scipy
