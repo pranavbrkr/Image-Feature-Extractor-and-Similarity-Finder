@@ -1,10 +1,10 @@
-Overview:
+## Overview:
 
 The project extracts the feature descriptors from the Caltech101 dataset images, stores them into a local instance of MongoDB database,
 and then consumes those database entries to find "k" images similar to the user enterred image.
 
 
-System Requirements:
+## System Requirements:
 
 1. Python 3.4.11+
 2. MongoDB Community Server v7.0.1
@@ -13,7 +13,7 @@ System Requirements:
 5. Stable internet connection to download the dataset
 
 
-Python libraries
+###Python libraries
 
 1. torch
 2. torchvision
@@ -24,9 +24,9 @@ Python libraries
 7. scipy
 
 
-Steps:
+##Steps:
 
-Task 1:
+###Task 1:
 
 1. Run the command "python ExtractFeatureDescriptors.py" from within the project directory. (or "python3 ExtractFeatureDescriptors.py" depedning upon the python alias in your system.)
 2. Enter Image ID of choice when prompted.
@@ -35,7 +35,7 @@ Task 1:
 The output will be displayed on the terminal.
 
 
-Task 2:
+###Task 2:
 
 (Make sure you have installed MongoDB requirements as stated above.)
 1. Change the host specification, database name and collection name on line 9, 15, 18 respectively if necessary.
@@ -44,7 +44,7 @@ Task 2:
 The data will be stored in the MongoDB collection.
 
 
-Task 3:
+###Task 3:
 
 (Make sure you have installed MongoDB requirements as stated above.)
 1. Change the host specification, database name and collection name on line 10, 22, 25 respectively if necessary.
