@@ -87,9 +87,9 @@ for i in range(6):
         if figure_data[i - 1]:
           axes[i, j].imshow(caltectDataset[figure_data[i - 1][j]["_id"]][1].permute(1, 2, 0))
           if j==0:
-            axes[i, j].set_title(f"{plot_titles[i-1]} sim: {round(figure_data[i - 1][j]['similarity'], 5)}", fontsize=10)
+            axes[i, j].set_title(f"{plot_titles[i-1]}=> id: {caltectDataset[figure_data[i - 1][j]['_id']][0]}, sim: {round(figure_data[i - 1][j]['similarity'], 5)}", fontsize=5)
           else:
-            axes[i, j].set_title(f"sim: {round(figure_data[i - 1][j]['similarity'], 5)}", fontsize=10)
+            axes[i, j].set_title(f"id: {caltectDataset[figure_data[i - 1][j]['_id']][0]}, sim: {round(figure_data[i - 1][j]['similarity'], 5)}", fontsize=5)
 
 # Adjust spacing between subplots
 plt.subplots_adjust(wspace=0.4, hspace=0.8)
