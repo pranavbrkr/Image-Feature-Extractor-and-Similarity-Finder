@@ -79,7 +79,7 @@ for i in range(6):
       if i == 0:
         if j == 0:
           axes[i, j].imshow(caltectDataset[image_id][1].permute(1, 2, 0))
-          axes[i,j].set_title("Input image")
+          axes[i,j].set_title(f"Input image: {image_id}")
         axes[i, j].axis('off')
         continue
       else:
