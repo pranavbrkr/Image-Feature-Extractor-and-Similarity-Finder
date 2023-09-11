@@ -16,7 +16,7 @@ feature_descriptors = db.Feature_Descriptors
 n = len(caltectDataset)
 
 for image_id in range(n):
-  if not checkChannel(caltectDataset[image_id][1]):
+  if checkChannel(caltectDataset[image_id][1]):
     data = {
       "_id": image_id,
       "color_moments": extractCM10x10(caltectDataset[image_id][1]),
