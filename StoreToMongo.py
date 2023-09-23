@@ -43,4 +43,3 @@ for image_id in range(n):
     # If image ID exists, just update the document
     feature_descriptors.update_one({"_id": image_id}, {"$set": data})
     print(f"Updated feature descriptors for Image {image_id}")
-z
