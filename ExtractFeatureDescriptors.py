@@ -20,7 +20,7 @@ transform_tensor = transforms.Compose([
 def loadDataset():
   loadedDataset = torchvision.datasets.Caltech101(root='./Dataset/', transform=transform_tensor, download=True)
   n = len(loadedDataset)
-  caltechDataset = [(i, loadedDataset[i][0]) for i in range(n)]
+  caltechDataset = [(i, loadedDataset[i][0], loadedDataset[i][1]) for i in range(n)]
   return caltechDataset
 
 

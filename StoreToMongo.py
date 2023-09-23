@@ -29,19 +29,18 @@ for image_id in range(n):
       "avgpool": extractResnetAvgpool1024(caltectDataset[image_id][1]),
       "layer3": extractResnetLayer3(caltectDataset[image_id][1]),
       "fc": extractResnetFc(caltectDataset[image_id][1]),
+      "label": caltectDataset[image_id][2],
     }
   else:
     # Else calculate just the HOG
     data = {
       "_id": image_id,
-      "hog": extractHOG(caltectDataset[image_id][1])
+      "hog": extractHOG(caltectDataset[image_id][1]),
+      "label": caltectDataset[image_id][2],
     }
 
   if feature_descriptors.find_one({"_id": image_id}):
     # If image ID exists, just update the document
     feature_descriptors.update_one({"_id": image_id}, {"$set": data})
     print(f"Updated feature descriptors for Image {image_id}")
-  else:
-    # Else just insert new document
-    feature_descriptors.insert_one(data)
-    print(f"Inserted feature descriptors for Image {image_id}")
+z
