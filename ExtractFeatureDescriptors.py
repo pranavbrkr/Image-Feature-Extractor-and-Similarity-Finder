@@ -130,6 +130,7 @@ def hook_fn(module, input, output):
 def extractResnetAvgpool1024(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
+  model.eval()
 
   # Resize the image to 224x224
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
@@ -151,6 +152,7 @@ def extractResnetAvgpool1024(image):
 def extractResnetLayer3(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
+  model.eval()
 
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
@@ -178,6 +180,7 @@ def extractResnetLayer3(image):
 def extractResnetFc(image):
 
   model = resnet50(weights=ResNet50_Weights.DEFAULT)
+  model.eval()
 
   image_tensor = torchvision.transforms.Resize((224, 224), antialias=True) (image)
 
