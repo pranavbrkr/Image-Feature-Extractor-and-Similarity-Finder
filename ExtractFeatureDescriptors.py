@@ -1,4 +1,5 @@
 from scipy.signal import convolve
+import math
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -45,13 +46,13 @@ def extractCM10x10(image):
   color_moments = []
 
   # Resize the tensor to 300x100
-  image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image)
+  image_tensor = torchvision.transforms.Resize((100, 300), antialias=True) (image)
 
   # Extract 30x10 grid from the image    
   for i in range(grid_num_x):
     for j in range(grid_num_y):
       # Select the 30x10 grid from the complete image
-      extracted_tensor = image_tensor[:, i * grid_width : (i + 1) * grid_width, j * grid_height : (j + 1) * grid_height]
+      extracted_tensor = image_tensor[:, j * grid_height : (j + 1) * grid_height, i * grid_width : (i + 1) * grid_width, ]
 
       grid_moment = []
 
@@ -61,7 +62,11 @@ def extractCM10x10(image):
         # extracted_tensor[channel] will select entire R, G, B planes
         mean = torch.mean(extracted_tensor[channel])
         std = torch.std(extracted_tensor[channel])
-        skewness = torch.mean((extracted_tensor[channel] - mean) ** 3) / std ** 3
+        skewness = torch.mean((extracted_tensor[channel] - mean) ** 3)
+        if skewness > 0:
+          skewness = math.pow(skewness, float(1) / 3)
+        else:
+          skewness = math.pow(abs(skewness), float(1) / 3)
 
         grid_moment.append([mean, std, skewness])
 
@@ -80,7 +85,7 @@ def extractHOG(image):
   hog_descriptor = []
   
   # Resize the image to 224x224
-  image_tensor = torchvision.transforms.Resize((300, 100), antialias=True) (image)
+  image_tensor = torchvision.transforms.Resize((100, 300), antialias=True) (image)
   
   # Convert RGB to Grayscale and remove outer dimension
   image_grayscale_tensor = torchvision.transforms.functional.rgb_to_grayscale(img=image_tensor).squeeze(0)
@@ -88,7 +93,7 @@ def extractHOG(image):
   for i in range(grid_num_x):
     for j in range(grid_num_y):
 
-      extracted_tensor = image_grayscale_tensor[i * grid_width : (i + 1) * grid_width, j * grid_height : (j + 1) * grid_height]
+      extracted_tensor = image_grayscale_tensor[j * grid_height : (j + 1) * grid_height, i * grid_width : (i + 1) * grid_width]
 
       # Convolve the [-1, 0, 1] and [-1, 0, 1]T over the 30x10 grid
       Gx = convolve(extracted_tensor, torch.tensor([[-1, 0, 1]]), "same")

@@ -15,7 +15,7 @@ caltectDataset = loadDataset()
 db = client.Multimedia_Web_DBs
 
 # select collection
-feature_descriptors = db.Feature_Descriptors
+feature_descriptors = db.Caltech101_Feature_Descriptors
 
 n = len(caltectDataset)
 
