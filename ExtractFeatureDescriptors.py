@@ -66,7 +66,7 @@ def extractCM10x10(image):
         if skewness > 0:
           skewness = math.pow(skewness, float(1) / 3)
         else:
-          skewness = math.pow(abs(skewness), float(1) / 3)
+          skewness = -math.pow(abs(skewness), float(1) / 3)
 
         grid_moment.append([mean, std, skewness])
 

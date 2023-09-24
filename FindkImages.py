@@ -22,8 +22,8 @@ k = int(input("Enter value of k: "))
 db = client.Multimedia_Web_DBs
 
 # Fetch all documents from the collection and then sort them by "_id"
-feature_descriptors = list(db.Feature_Descriptors.find({}))
-feature_descriptors = sorted(list(db.Feature_Descriptors.find({})), key=lambda x: x["_id"], reverse=False)
+feature_descriptors = list(db.Caltech101_Feature_Descriptors.find({}))
+feature_descriptors = sorted(list(db.Caltech101_Feature_Descriptors.find({})), key=lambda x: x["_id"], reverse=False)
 n = len(feature_descriptors)
 
 euclidean_cm_distances = []
