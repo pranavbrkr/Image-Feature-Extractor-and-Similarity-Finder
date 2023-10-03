@@ -19,7 +19,7 @@ feature_descriptors = db.Caltech101_Feature_Descriptors
 
 n = len(caltectDataset)
 
-for image_id in range(n):
+for image_id in range(410, n):
   if checkChannel(caltectDataset[image_id][1]):
   # Calculate all feature descriptors if image has 3 channels
     data = {
