@@ -19,7 +19,7 @@ feature_descriptors = db.Caltech101_Feature_Descriptors
 
 n = len(caltectDataset)
 
-for image_id in range(410, n):
+for image_id in range(n):
   if checkChannel(caltectDataset[image_id][1]):
   # Calculate all feature descriptors if image has 3 channels
     data = {
@@ -33,9 +33,16 @@ for image_id in range(410, n):
     }
   else:
     # Else calculate just the HOG
+    gray_to_rgb = torchvision.transforms.Lambda(lambda x: x.repeat(3, 1, 1))
+    rgb_image = gray_to_rgb(caltectDataset[image_id][1])
+
     data = {
       "_id": image_id,
-      "hog": extractHOG(caltectDataset[image_id][1]),
+      "color_moments": extractCM10x10(rgb_image),
+      "hog": extractHOG(rgb_image),
+      "avgpool": extractResnetAvgpool1024(rgb_image),
+      "layer3": extractResnetLayer3(rgb_image),
+      "fc": extractResnetFc(rgb_image),
       "label": caltectDataset[image_id][2],
     }
 
