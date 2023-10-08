@@ -22,7 +22,7 @@ def extractKLatentSemantics(k, image_sim_matrix, feature_model, dim_reduction):
   feature_ids = [x["_id"] for x in feature_descriptors if x["_id"] % 2 == 0]
   feature_labels = [x["label"] for x in feature_descriptors if x["_id"] % 2 == 0]
 
-  filename = 'ls4.json'
+  filename = 'ls3.json'
 
   match dim_reduction:
 
@@ -51,13 +51,20 @@ def extractKLatentSemantics(k, image_sim_matrix, feature_model, dim_reduction):
   with open(filename, 'w', encoding='utf-8') as f:
     json.dump(k_latent_semantics, f, ensure_ascii = False)
 
-def findImageImageSimMatrix(feature_model):
-   
-  feature_vectors = [x[feature_model] for x in feature_descriptors if x["_id"] % 2 == 0]
+def findLabelLabelSimMatrix(feature_model):
 
-  n = len(feature_vectors)
+  label_sim_matrix = []
+  label_mean_vectors = []
 
-  image_sim_matrix = np.zeros((n, n))
+  for label in range(101):
+    label_vectors = [x[feature_model] for x in feature_descriptors if x["label"] == label and x["_id"] % 2 == 0]
+    mean_vector = [sum(col)/len(col) for col in zip(*label_vectors)]
+    label_mean_vectors.append(mean_vector)
+  
+
+  n = len(label_mean_vectors)
+
+  label_sim_matrix = np.zeros((n, n))
 
   for i in range(n):
     for j in range(i + 1, n):
@@ -65,15 +72,15 @@ def findImageImageSimMatrix(feature_model):
       match feature_model:
 
         case "color_moments":
-          image_sim_matrix[i][j] = image_sim_matrix[j][i] = math.dist(feature_vectors[i], feature_vectors[j])
+          label_sim_matrix[i][j] = label_sim_matrix[j][i] = math.dist(label_mean_vectors[i], label_mean_vectors[j])
         
         case "hog":
-          image_sim_matrix[i][j] = image_sim_matrix[j][i] = (np.dot(feature_vectors[i], feature_vectors[j]) / (np.linalg.norm(feature_vectors[i]) * np.linalg.norm(feature_vectors[j])))
+          label_sim_matrix[i][j] = label_sim_matrix[j][i] = (np.dot(label_mean_vectors[i], label_mean_vectors[j]) / (np.linalg.norm(label_mean_vectors[i]) * np.linalg.norm(label_mean_vectors[j])))
 
         case "avgpool" | "layer3" | "fc":
-          image_sim_matrix[i][j] = image_sim_matrix[j][i] = scipy.stats.pearsonr(feature_vectors[i], feature_vectors[j]).statistic
+          label_sim_matrix[i][j] = label_sim_matrix[j][i] = scipy.stats.pearsonr(label_mean_vectors[i], label_mean_vectors[j]).statistic
           
-  return image_sim_matrix
+  return label_sim_matrix
 
 
 def main():
@@ -96,9 +103,9 @@ def main():
   print("4. k-means")
   dim_reduction = int(input("Select the dimensionality reduction technique: "))
 
-  image_sim_matrix = findImageImageSimMatrix(feature_model)
+  label_sim_matrix = findLabelLabelSimMatrix(feature_model)
 
-  extractKLatentSemantics(k, image_sim_matrix, feature_model, dim_reduction)
+  extractKLatentSemantics(k, label_sim_matrix, feature_model, dim_reduction)
 
   
 
