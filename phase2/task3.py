@@ -1,7 +1,7 @@
 import json
 from pymongo import MongoClient
 from task0a import *
-import scipy
+import svd_nmf as svd_nmf
 import numpy as np
 from sklearn.decomposition import NMF
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -32,15 +32,24 @@ def extractKLatentSemantics(k, feature_model, dim_reduction):
   match dim_reduction:
 
     case 1:
-      U, S, Vh = scipy.sparse.linalg.svds(np.array(feature_vectors), k=k)
+      U, S, Vh = svd_nmf.svd(matrix = np.array(feature_vectors), k = k)
+      print(U)
+      print(U.shape)
+      print(S)
+      print(S.shape)
+      print(Vh)
+      print(Vh.shape)
       k_latent_semantics = sorted(list(zip(feature_ids, U.tolist())), key = lambda x: x[1][0], reverse = True)
 
     case 2:
-      model = NMF(n_components = k, init = 'random', solver = 'cd', alpha_H = 0.01, alpha_W = 0.01, max_iter = 10000)
       min_value = np.min(feature_vectors)
       feature_vectors_shifted = feature_vectors - min_value
-      U = model.fit_transform(np.array(feature_vectors_shifted))
-      k_latent_semantics = sorted(list(zip(feature_ids, U.tolist())), key = lambda x: x[1][0], reverse = True)
+      W, H = svd_nmf.nmf(matrix = np.array(feature_vectors_shifted), k= k)
+      print(W)
+      print(W.shape)
+      print(H)
+      print(H.shape)
+      k_latent_semantics = sorted(list(zip(feature_ids, W.tolist())), key = lambda x: x[1][0], reverse = True)
 
     case 3:
       U = LinearDiscriminantAnalysis(n_components = k).fit_transform(feature_vectors, feature_labels)
